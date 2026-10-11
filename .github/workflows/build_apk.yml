@@ -30,8 +30,12 @@ jobs:
           java -version
           flutter doctor -v
 
-      - name: Setup local.properties
+      - name: Ensure Debug Keystore & local.properties
         run: |
+          mkdir -p ~/.android
+          if [ ! -f ~/.android/debug.keystore ]; then
+            keytool -genkey -v -keystore ~/.android/debug.keystore -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US"
+          fi
           echo "flutter.sdk=$FLUTTER_ROOT" > android/local.properties
           cat android/local.properties
 
@@ -42,7 +46,22 @@ jobs:
         run: flutter pub get
 
       - name: Build APK (Release)
-        run: flutter build apk --release --verbose
+        run: |
+          set -o pipefail
+          flutter build apk --release --verbose 2>&1 | tee build_output.log
+
+      - name: Print logs on failure
+        if: failure()
+        run: |
+          echo "==================== BUILD FAILURE TAIL LOG ===================="
+          tail -n 150 build_output.log
+
+      - name: Upload Build Log on Failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-failure-log
+          path: build_output.log
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
