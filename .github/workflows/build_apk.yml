@@ -55,6 +55,9 @@ jobs:
         run: |
           echo "==================== BUILD FAILURE TAIL LOG ===================="
           tail -n 150 build_output.log
+          FAIL_SNIPPET=$(grep -E -C 3 "FAILURE|BUILD FAILED|Execution failed|What went wrong" build_output.log | head -n 30 || tail -n 20 build_output.log)
+          FAIL_SNIPPET="${FAIL_SNIPPET//$'\n'/'%0A'}"
+          echo "::error title=Gradle Error::$FAIL_SNIPPET"
 
       - name: Upload Build Log on Failure
         if: failure()
