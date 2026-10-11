@@ -1,0 +1,25 @@
+name: kids_youtube_clone
+description: "A parent-curated, toddler-safe YouTube video player Flutter app with touch screen lock."
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+  flutter: ">=3.10.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_riverpod: ^2.5.1
+  youtube_player_flutter: ^9.0.1
+  shared_preferences: ^2.2.3
+  google_fonts: ^6.2.1
+  uuid: ^4.4.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+
+flutter:
+  uses-material-design: true
