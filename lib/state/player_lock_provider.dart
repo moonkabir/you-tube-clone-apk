@@ -33,10 +33,10 @@ class PlayerLockNotifier extends StateNotifier<PlayerLockState> {
   }
 
   /// Deactivate screen lock mode
-  /// Restores flexible orientation and UI controls
+  /// Restores UI controls while preserving player orientation
   Future<void> unlockScreen() async {
     state = state.copyWith(isLocked: false, unlockProgress: 0.0);
-    await SystemUiHelper.setPortraitMode();
+    await SystemUiHelper.setLandscapeMode();
   }
 
   /// Update unlock hold progress (from 0.0 to 1.0)
